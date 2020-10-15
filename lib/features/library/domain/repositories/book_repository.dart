@@ -13,6 +13,6 @@ abstract class BookRepository {
   // Future<Either<Failure, Book>> getBookFromCache(String filePath);
   Future<Either<Failure, List<Book>>> getAllBooksFromCache();
   Future<Either<Failure, List<Book>>> getFilteredBooksFromCache(BookFilter filter);
-  Future<Failure> removeBookFromCache(int bookID);
-  Future<Failure> removeAllBooksFromCache();
+  Future<Either<Failure, void>> removeBookFromCache(int bookID);
+  Future<Either<Failure, void>> removeAllBooksFromCache();
 }

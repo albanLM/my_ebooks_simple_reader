@@ -5,8 +5,8 @@ import 'package:my_ebooks_simple_reader/features/library/domain/entities/synchro
 
 class SynchronizedFolderRepositoryImpl implements SynchronizedFolderRepository {
   @override
-  Future<Failure> addFolders(List<String> directoryPaths) {
-    // TODO: implement addFolders
+  Future<Either<Failure, void>> addFolder(String path) {
+    // TODO: implement addFolder
     throw UnimplementedError();
   }
 
@@ -17,8 +17,8 @@ class SynchronizedFolderRepositoryImpl implements SynchronizedFolderRepository {
   }
 
   @override
-  Future<Failure> removeFolders(List<int> ids) {
-    // TODO: implement removeFolders
+  Future<Either<Failure, void>> removeFolder(int id) {
+    // TODO: implement removeFolder
     throw UnimplementedError();
   }
 }

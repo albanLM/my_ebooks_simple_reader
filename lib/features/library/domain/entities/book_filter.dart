@@ -1,3 +1,12 @@
+import 'book.dart';
+
 class BookFilter {
-  // TODO : To implement
+  final String author;
+  final String title;
+  final String saga;
+  final List<String> genres;
+  final List<String> language;
+  final List<ReadState> readState;
+
+  BookFilter({this.author, this.title, this.saga, this.genres, this.language, this.readState});
 }
