@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:my_ebooks_simple_reader/core/failures/failures.dart';
+import 'package:my_ebooks_simple_reader/core/errors/failures.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/entities/book.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/entities/book_filter.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/repositories/book_repository.dart';
