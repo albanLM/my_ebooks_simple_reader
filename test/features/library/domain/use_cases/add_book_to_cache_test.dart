@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:my_ebooks_simple_reader/core/enums.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/entities/book.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/repositories/book_repository.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/use_cases/add_book_to_cache.dart';

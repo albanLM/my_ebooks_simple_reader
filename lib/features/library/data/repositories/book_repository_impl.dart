@@ -38,7 +38,7 @@ class BookRepositoryImpl implements BookRepository {
   @override
   Future<Either<Failure, List<Book>>> getAllBooksFromCache() async {
     try {
-      return Right(await localDataSource.getAllBooks());
+      return Right(await localDataSource.getBooks());
     } on CacheException {
       return Left(CacheFailure());
     }

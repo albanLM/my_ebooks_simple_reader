@@ -1,3 +1,5 @@
+import 'package:my_ebooks_simple_reader/core/enums.dart';
+
 import 'book.dart';
 
 class BookFilter {

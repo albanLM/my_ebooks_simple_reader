@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:my_ebooks_simple_reader/core/enums.dart';
 import 'package:my_ebooks_simple_reader/core/errors/exceptions.dart';
 import 'package:my_ebooks_simple_reader/core/errors/failures.dart';
 import 'package:my_ebooks_simple_reader/features/library/data/data_sources/local_data_source.dart';
@@ -36,25 +37,24 @@ void main() {
     final filter = BookFilter(title: 'Harry Potter');
     final path = '/some/path/HarryPotter.epub';
 
-    test('should get books from local data source', () async {
+    test('should get book from local data source', () async {
       // arrange
-      final mockAnswer = [tBook];
-      when(mockLocalDataSource.getAllBooks())
-          .thenAnswer((_) async => mockAnswer);
+      final mockAnswer = tBook;
+      when(mockLocalDataSource.getBooks()).thenAnswer((_) async => [mockAnswer]);
 
       // act
       final result = await bookRepositoryImpl.getAllBooksFromCache();
 
       // assert
-      expect(result, Right<Failure, List<Book>>(mockAnswer));
-      verify(mockLocalDataSource.getAllBooks());
+      expect(result, Right(mockAnswer));
+      verify(mockLocalDataSource.getBooks());
       verifyNoMoreInteractions(mockLocalDataSource);
     });
 
     test('should return a failure when getting books throws an exception',
         () async {
       // arrange
-      when(mockLocalDataSource.getAllBooks()).thenThrow(CacheException());
+      when(mockLocalDataSource.getBooks()).thenThrow(CacheException());
 
       // act
       final result = await bookRepositoryImpl.getAllBooksFromCache();

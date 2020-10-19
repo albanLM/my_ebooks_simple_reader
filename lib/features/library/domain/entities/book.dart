@@ -1,10 +1,8 @@
 import 'package:epub/epub.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:my_ebooks_simple_reader/core/enums.dart';
 
-enum ReadState { notRead, inProgress, read }
-
-class Book extends Equatable {
+class Book {
   final int id;
   final String author;
   final String title;
@@ -29,7 +27,4 @@ class Book extends Equatable {
       @required this.filePath,
       @required this.readState,
       @required this.cover});
-
-  @override
-  List<Object> get props => [id, filePath];
 }
