@@ -46,19 +46,21 @@ void main() {
 
     test('should add a synchronized folder to local data source', () async {
       // act
-      await synchronizedFolderRepositoryImpl.addFolder(folder.path);
+      final folderPaths = [folder.path];
+      await synchronizedFolderRepositoryImpl.addFolders(folderPaths);
 
       // assert
-      verify(mockLocalDataSource.addFolder(folder.path));
+      verify(mockLocalDataSource.addFolders(folderPaths));
       verifyNoMoreInteractions(mockLocalDataSource);
     });
 
     test('should return a failure when adding a folder to data source fails', () async {
       // arrange
-      when(mockLocalDataSource.addFolder(folder.path)).thenThrow(CacheException());
+      final folderPaths = [folder.path];
+      when(mockLocalDataSource.addFolders(folderPaths)).thenThrow(CacheException());
 
       // act
-      final result = await synchronizedFolderRepositoryImpl.addFolder(folder.path);
+      final result = await synchronizedFolderRepositoryImpl.addFolders(folderPaths);
 
       // assert
       expect(result, Left(CacheFailure()));
@@ -66,19 +68,21 @@ void main() {
 
     test('should remove a synchronized folder from local data source', () async {
       // act
-      await synchronizedFolderRepositoryImpl.removeFolder(folder.id);
+      final folderIds = [folder.id];
+      await synchronizedFolderRepositoryImpl.removeFolders(folderIds);
 
       // assert
-      verify(mockLocalDataSource.removeFolder(folder.id));
+      verify(mockLocalDataSource.removeFolders(folderIds));
       verifyNoMoreInteractions(mockLocalDataSource);
     });
 
     test('should return a failure when removing a folder from data source fails', () async {
       // arrange
-      when(mockLocalDataSource.removeFolder(folder.id)).thenThrow(CacheException());
+      final folderIds = [folder.id];
+      when(mockLocalDataSource.removeFolders(folderIds)).thenThrow(CacheException());
 
       // act
-      final result = await synchronizedFolderRepositoryImpl.removeFolder(folder.id);
+      final result = await synchronizedFolderRepositoryImpl.removeFolders(folderIds);
 
       // assert
       expect(result, Left(CacheFailure()));

@@ -3,22 +3,22 @@ import 'package:mockito/mockito.dart';
 import 'package:my_ebooks_simple_reader/core/enums.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/entities/book.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/repositories/book_repository.dart';
-import 'package:my_ebooks_simple_reader/features/library/domain/use_cases/remove_book_from_cache.dart';
+import 'package:my_ebooks_simple_reader/features/library/domain/use_cases/remove_books_from_cache.dart';
 
 class MockBookRepository extends Mock implements BookRepository {}
 
 void main() {
   MockBookRepository mockBookRepository;
-  RemoveBookFromCache removeBookFromCache;
+  RemoveBooksFromCache removeBooksFromCache;
 
   group('Remove a book from the cache', () {
     setUp(() {
       mockBookRepository = MockBookRepository();
-      removeBookFromCache = RemoveBookFromCache(mockBookRepository);
+      removeBooksFromCache = RemoveBooksFromCache(mockBookRepository);
     });
 
     final tBook = Book(
-        id: 1,
+        id: '123',
         author: 'J.K Rolling',
         title: 'Harry Potter et la chambre des Secrets',
         description: 'Un livre sur les sorciers',
@@ -32,10 +32,11 @@ void main() {
 
     test('should remove the book from the book repository', () async {
       // act
-      await removeBookFromCache(tBook.id);
+      final bookIdList = [tBook.id];
+      await removeBooksFromCache(bookIdList);
 
       // assert
-      verify(mockBookRepository.removeBookFromCache(tBook.id));
+      verify(mockBookRepository.removeBooksFromCache(bookIdList));
       verifyNoMoreInteractions(mockBookRepository);
     });
   });

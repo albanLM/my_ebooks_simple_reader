@@ -1,3 +1,11 @@
-class CacheException implements Exception {}
+class CacheException implements Exception {
+  final String message;
 
-class FileException implements Exception {}
+  CacheException({this.message = ''});
+}
+
+class FileException implements Exception {
+  final String message;
+
+  FileException({this.message = ''});
+}

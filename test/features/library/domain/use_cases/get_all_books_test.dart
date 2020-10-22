@@ -21,7 +21,7 @@ void main() {
     });
 
     final tBook = Book(
-        id: 1,
+        id: '123',
         author: 'J.K Rolling',
         title: 'Harry Potter et la chambre des Secrets',
         description: 'Un livre sur les sorciers',

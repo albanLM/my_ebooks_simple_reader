@@ -1,15 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:my_ebooks_simple_reader/core/errors/failures.dart';
 import 'package:my_ebooks_simple_reader/core/usecases/usecase.dart';
-import 'package:my_ebooks_simple_reader/features/library/domain/entities/book.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/repositories/book_repository.dart';
 
-class AddBookToCache implements Usecase<Book, String> {
+class RemoveBooksFromCache implements Usecase<void, List<String>> {
   final BookRepository bookRepository;
 
-  AddBookToCache(this.bookRepository);
+  RemoveBooksFromCache(this.bookRepository);
 
-  Future<Either<Failure, Book>> call(String filePath) {
-    return bookRepository.addBookFromFile(filePath);
+  @override
+  Future<Either<Failure, void>> call(List<String> ids) {
+    return bookRepository.removeBooksFromCache(ids);
   }
 }

@@ -38,6 +38,7 @@ dependencies:
   hive_generator: ^0.7.3 # Hive extension
   file_picker: ^2.0.7 # File picker widgets
   epub: ^2.1.0 # Loads epub files
+  path: ^1.7.0 # Gets paths and file extensions
 
 dev_dependencies:
   flutter_test:

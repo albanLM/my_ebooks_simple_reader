@@ -3,13 +3,13 @@ import 'package:my_ebooks_simple_reader/core/errors/failures.dart';
 import 'package:my_ebooks_simple_reader/core/usecases/usecase.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/repositories/synchronized_folder_repository.dart';
 
-class RemoveSynchronizedFolderFromCache implements Usecase<void, int> {
+class RemoveSynchronizedFoldersFromCache implements Usecase<void, List<int>> {
   final SynchronizedFolderRepository synchronizedFolderRepository;
 
-  RemoveSynchronizedFolderFromCache(this.synchronizedFolderRepository);
+  RemoveSynchronizedFoldersFromCache(this.synchronizedFolderRepository);
 
   @override
-  Future<Either<Failure, void>> call(int id) {
-    return synchronizedFolderRepository.removeFolder(id);
+  Future<Either<Failure, void>> call(List<int> ids) {
+    return synchronizedFolderRepository.removeFolders(ids);
   }
 }

@@ -4,23 +4,23 @@ import 'package:mockito/mockito.dart';
 import 'package:my_ebooks_simple_reader/core/enums.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/entities/book.dart';
 import 'package:my_ebooks_simple_reader/features/library/domain/repositories/book_repository.dart';
-import 'package:my_ebooks_simple_reader/features/library/domain/use_cases/add_book_to_cache.dart';
+import 'package:my_ebooks_simple_reader/features/library/domain/use_cases/add_books_to_cache.dart';
 
 class MockBookRepository extends Mock implements BookRepository {}
 
 void main() {
-  AddBookToCache addBook;
+  AddBooksToCache addBooks;
   MockBookRepository mockBookRepository;
 
   group('Add book to cache', () {
     setUp(() {
       mockBookRepository = MockBookRepository();
-      addBook = AddBookToCache(mockBookRepository);
+      addBooks = AddBooksToCache(mockBookRepository);
     });
 
     final filePath = 'some/path/to/a/file.epub';
     final tBook = Book(
-        id: 1,
+        id: '123',
         author: 'J.K Rolling',
         title: 'Harry Potter et la chambre des Secrets',
         description: 'Un livre sur les sorciers',
@@ -33,15 +33,12 @@ void main() {
         cover: null);
 
     test('should get books from the repository', () async {
-      // arrange
-      when(mockBookRepository.addBookFromFile(filePath))
-          .thenAnswer((_) async => Right(tBook));
-
       // act
-      final result = await addBook(filePath);
+      final bookList = [filePath];
+      await addBooks(bookList);
 
       // assert
-      expect(result, Right(tBook));
+      verify(mockBookRepository.addBooksFromFiles(bookList));
     });
   });
 }

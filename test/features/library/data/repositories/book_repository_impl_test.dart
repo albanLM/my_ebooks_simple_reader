@@ -23,7 +23,7 @@ void main() {
     });
 
     final tBook = BookModel(
-        id: 1,
+        id: '123',
         author: 'J.K Rolling',
         title: 'Harry Potter et la chambre des Secrets',
         description: 'Un livre sur les sorciers',
@@ -37,147 +37,149 @@ void main() {
     final filter = BookFilter(title: 'Harry Potter');
     final path = '/some/path/HarryPotter.epub';
 
-    test('should get book from local data source', () async {
-      // arrange
-      final mockAnswer = tBook;
-      when(mockLocalDataSource.getBooks()).thenAnswer((_) async => [mockAnswer]);
+    group('repository methods', () {
+      test('should get book from local data source', () async {
+        // arrange
+        final mockAnswer = [tBook];
+        when(mockLocalDataSource.getBooks()).thenAnswer((_) async => mockAnswer);
 
-      // act
-      final result = await bookRepositoryImpl.getAllBooksFromCache();
+        // act
+        final result = await bookRepositoryImpl.getAllBooksFromCache();
 
-      // assert
-      expect(result, Right(mockAnswer));
-      verify(mockLocalDataSource.getBooks());
-      verifyNoMoreInteractions(mockLocalDataSource);
+        // assert
+        expect(result, Right<Failure, List<Book>>(mockAnswer));
+        verify(mockLocalDataSource.getBooks());
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should get filtered book from local data source', () async {
+        // arrange
+        final mockAnswer = [tBook];
+        when(mockLocalDataSource.getFilteredBooks(filter))
+            .thenAnswer((_) async => mockAnswer);
+
+        // act
+        final result = await bookRepositoryImpl.getFilteredBooksFromCache(filter);
+
+        // assert
+        expect(result, Right<Failure, List<Book>>(mockAnswer));
+        verify(mockLocalDataSource.getFilteredBooks(filter));
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should add book to the local data source', () async {
+        // act
+        final bookPaths = [path];
+        await bookRepositoryImpl.addBooksFromFiles(bookPaths);
+
+        // assert
+        verify(mockLocalDataSource.addBooks(bookPaths));
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should add books from directory to the local data source', () async {
+        // act
+        await bookRepositoryImpl.addAllBooksFromDirectory(path);
+
+        // assert
+        verify(mockLocalDataSource.addAllBooksFromDirectory(path));
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should remove a book from local data source', () async {
+        // act
+        final bookIds = [tBook.id];
+        await bookRepositoryImpl.removeBooksFromCache(bookIds);
+
+        // assert
+        verify(mockLocalDataSource.removeBooks(bookIds));
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should remove all books from local data source', () async {
+        // act
+        await bookRepositoryImpl.removeAllBooksFromCache();
+
+        // assert
+        verify(mockLocalDataSource.removeAllBooks());
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
     });
 
-    test('should return a failure when getting books throws an exception',
-        () async {
-      // arrange
-      when(mockLocalDataSource.getBooks()).thenThrow(CacheException());
+    group('error handling', () {
+      test('should return a failure when getting books throws an exception',
+          () async {
+        // arrange
+        when(mockLocalDataSource.getBooks()).thenThrow(CacheException());
 
-      // act
-      final result = await bookRepositoryImpl.getAllBooksFromCache();
+        // act
+        final result = await bookRepositoryImpl.getAllBooksFromCache();
 
-      // assert
-      expect(result, Left(CacheFailure()));
-    });
+        // assert
+        expect(result, Left(CacheFailure()));
+      });
+      test(
+          'should return a failure when getting filtered books throws an exception',
+          () async {
+        // arrange
+        when(mockLocalDataSource.getFilteredBooks(any))
+            .thenThrow(CacheException());
 
-    test('should get filtered book from local data source', () async {
-      // arrange
-      final mockAnswer = [tBook];
-      when(mockLocalDataSource.getFilteredBooks(filter))
-          .thenAnswer((_) async => mockAnswer);
+        // act
+        final result =
+            await bookRepositoryImpl.getFilteredBooksFromCache(filter);
 
-      // act
-      final result = await bookRepositoryImpl.getFilteredBooksFromCache(filter);
+        // assert
+        expect(result, Left(CacheFailure()));
+      });
+      test('should return a failure when adding a book throws an exception',
+          () async {
+        // arrange
+        when(mockLocalDataSource.addBooks(any)).thenThrow(CacheException());
 
-      // assert
-      expect(result, Right<Failure, List<Book>>(mockAnswer));
-      verify(mockLocalDataSource.getFilteredBooks(filter));
-      verifyNoMoreInteractions(mockLocalDataSource);
-    });
+        // act
+        final result = await bookRepositoryImpl.addBooksFromFiles([path]);
 
-    test(
-        'should return a failure when getting filtered books throws an exception',
-        () async {
-      // arrange
-      when(mockLocalDataSource.getFilteredBooks(filter))
-          .thenThrow(CacheException());
+        // assert
+        expect(result, Left(CacheFailure()));
+      });
+      test(
+          'should return a failure when adding books from directory throws an exception',
+          () async {
+        // arrange
+        when(mockLocalDataSource.addAllBooksFromDirectory(any))
+            .thenThrow(CacheException());
 
-      // act
-      final result = await bookRepositoryImpl.getFilteredBooksFromCache(filter);
+        // act
+        final result = await bookRepositoryImpl.addAllBooksFromDirectory(path);
 
-      // assert
-      expect(result, Left(CacheFailure()));
-    });
+        // assert
+        expect(result, Left(CacheFailure()));
+      });
+      test('should return a failure when removing a book throws an exception',
+          () async {
+        // arrange
+        when(mockLocalDataSource.removeBooks(any))
+            .thenThrow(CacheException());
 
-    test('should add book to the local data source', () async {
-      // act
-      await bookRepositoryImpl.addBookFromFile(path);
+        // act
+        final result = await bookRepositoryImpl.removeBooksFromCache([tBook.id]);
 
-      // assert
-      verify(mockLocalDataSource.addBookFromFile(path));
-      verifyNoMoreInteractions(mockLocalDataSource);
-    });
+        // assert
+        expect(result, Left(CacheFailure()));
+      });
+      test(
+          'should return a failure when removing all books throws an exception',
+          () async {
+        // arrange
+        when(mockLocalDataSource.removeAllBooks()).thenThrow(CacheException());
 
-    test('should return a failure when adding a book throws an exception',
-        () async {
-      // arrange
-      when(mockLocalDataSource.addBookFromFile(path))
-          .thenThrow(CacheException());
+        // act
+        final result = await bookRepositoryImpl.removeAllBooksFromCache();
 
-      // act
-      final result = await bookRepositoryImpl.addBookFromFile(path);
-
-      // assert
-      expect(result, Left(CacheFailure()));
-    });
-
-    test('should add books from directory to the local data source', () async {
-      // act
-      await bookRepositoryImpl.addAllBooksFromDirectory(path);
-
-      // assert
-      verify(mockLocalDataSource.addAllBooksFromDirectory(path));
-      verifyNoMoreInteractions(mockLocalDataSource);
-    });
-
-    test(
-        'should return a failure when adding books from directory throws an exception',
-        () async {
-      // arrange
-      when(mockLocalDataSource.addAllBooksFromDirectory(path))
-          .thenThrow(CacheException());
-
-      // act
-      final result = await bookRepositoryImpl.addAllBooksFromDirectory(path);
-
-      // assert
-      expect(result, Left(CacheFailure()));
-    });
-
-    test('should remove a book from local data source', () async {
-      // act
-      await bookRepositoryImpl.removeBookFromCache(tBook.id);
-
-      // assert
-      verify(mockLocalDataSource.removeBook(tBook.id));
-      verifyNoMoreInteractions(mockLocalDataSource);
-    });
-
-    test('should return a failure when removing a book throws an exception',
-        () async {
-      // arrange
-      when(mockLocalDataSource.removeBook(tBook.id))
-          .thenThrow(CacheException());
-
-      // act
-      final result = await bookRepositoryImpl.removeBookFromCache(tBook.id);
-
-      // assert
-      expect(result, Left(CacheFailure()));
-    });
-
-    test('should remove all books from local data source', () async {
-      // act
-      await bookRepositoryImpl.removeAllBooksFromCache();
-
-      // assert
-      verify(mockLocalDataSource.removeAllBooks());
-      verifyNoMoreInteractions(mockLocalDataSource);
-    });
-
-    test('should return a failure when removing all books throws an exception',
-        () async {
-      // arrange
-      when(mockLocalDataSource.removeAllBooks()).thenThrow(CacheException());
-
-      // act
-      final result = await bookRepositoryImpl.removeAllBooksFromCache();
-
-      // assert
-      expect(result, Left(CacheFailure()));
+        // assert
+        expect(result, Left(CacheFailure()));
+      });
     });
   });
 }

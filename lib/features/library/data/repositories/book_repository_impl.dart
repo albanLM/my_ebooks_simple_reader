@@ -12,7 +12,7 @@ class BookRepositoryImpl implements BookRepository {
   BookRepositoryImpl(this.localDataSource);
 
   @override
-  Future<Either<Failure, List<Book>>> addAllBooksFromDirectory(
+  Future<Either<Failure, void>> addAllBooksFromDirectory(
       String directoryPath) async {
     try {
       return Right(
@@ -25,9 +25,9 @@ class BookRepositoryImpl implements BookRepository {
   }
 
   @override
-  Future<Either<Failure, Book>> addBookFromFile(String filePath) async {
+  Future<Either<Failure, void>> addBooksFromFiles(List<String> filePaths) async {
     try {
-      return Right(await localDataSource.addBookFromFile(filePath));
+      return Right(await localDataSource.addBooks(filePaths));
     } on CacheException {
       return Left(CacheFailure());
     } on FileException {
@@ -64,9 +64,9 @@ class BookRepositoryImpl implements BookRepository {
   }
 
   @override
-  Future<Either<Failure, void>> removeBookFromCache(int bookID) async {
+  Future<Either<Failure, void>> removeBooksFromCache(List<String> bookIDs) async {
     try {
-      return Right(await localDataSource.removeBook(bookID));
+      return Right(await localDataSource.removeBooks(bookIDs));
     } on CacheException {
       return Left(CacheFailure());
     }

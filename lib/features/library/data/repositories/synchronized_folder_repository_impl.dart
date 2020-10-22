@@ -11,9 +11,9 @@ class SynchronizedFolderRepositoryImpl implements SynchronizedFolderRepository {
   SynchronizedFolderRepositoryImpl(this.localDataSource);
 
   @override
-  Future<Either<Failure, void>> addFolder(String path) async {
+  Future<Either<Failure, void>> addFolders(List<String> folderPaths) async {
     try {
-      return Right(await localDataSource.addFolder(path));
+      return Right(await localDataSource.addFolders(folderPaths));
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -29,9 +29,9 @@ class SynchronizedFolderRepositoryImpl implements SynchronizedFolderRepository {
   }
 
   @override
-  Future<Either<Failure, void>> removeFolder(int id) async {
+  Future<Either<Failure, void>> removeFolders(List<int> ids) async {
     try {
-      return Right(await localDataSource.removeFolder(id));
+      return Right(await localDataSource.removeFolders(ids));
     } on CacheException {
       return Left(CacheFailure());
     }
